@@ -32,6 +32,7 @@ module.exports = function(grunt) {
     fileserver: {
       default_options: {
         options: {
+          directory: 'test'
         },
         files: {
           'tmp/default_options': ['test/fixtures/testing', 'test/fixtures/123']

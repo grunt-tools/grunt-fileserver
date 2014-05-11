@@ -38,7 +38,7 @@ function runServer(options){
 
   options.port = options.port || 8080;
 
-  console.log('options : '+JSON.stringify(options));
+  // console.log('options : '+JSON.stringify(options));
 
   return http.createServer(function(request, response) {
 
@@ -55,9 +55,13 @@ function runServer(options){
               return;
           }
 
-          if(fs.statSync(filename).isDirectory()) filename += ( ( /\/$/.test(filename) ? '' : '/' ) + 'index.html' );
+          if(fs.statSync(filename).isDirectory()) {
+            filename += ( ( /\/$/.test(filename) ? '' : '/' ) + 'index.html' );
+          }
           
-          if( /\w+\.\w+/.test(filename) ) contentType = mime.lookup( filename ) || contentType;
+          if( /\w+\.\w+/.test(filename) ) {
+            contentType = mime.lookup( filename ) || contentType;
+          }
 
           fs.readFile(filename, "binary", function(err, file) {
               if(err) {        
@@ -75,7 +79,7 @@ function runServer(options){
           });
       });
   }).listen(parseInt(options.port, 10),options.hostname,function(){
-      console.log("Static file server running at\n  => ".yellow + ( "http://localhost:" + options.port ).green + "/\nCTRL + C to shutdown\n");
+      console.log("Static file server running at\n  => ".yellow + ( "http://"+( ( options.hostname === "0.0.0.0" ) ? "localhost": options.hostname )+":" + options.port ).green + "/\nCTRL + C to shutdown\n".yellow );
   });
 
 }
