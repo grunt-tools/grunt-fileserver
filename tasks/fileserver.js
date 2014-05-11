@@ -38,12 +38,12 @@ function runServer(options){
 
   options.port = options.port || 8080;
 
-  // console.log('options : '+JSON.stringify(options));
+  console.log('options : '+JSON.stringify(options));
 
   return http.createServer(function(request, response) {
 
       var uri = url.parse(request.url).pathname,
-      filename = path.join(__dirname+(options.directory || ''), uri),
+      filename = path.join(__dirname+'/'+(options.directory || ''), uri),
       contentType = "text/plain";
 
       path.exists(filename, function(exists) {

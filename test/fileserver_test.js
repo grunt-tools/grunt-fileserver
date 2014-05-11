@@ -26,8 +26,8 @@ exports.fileserver = {
   setUp: function(done) {
     // setup here if necessary
     done();
-  },
-  default_options: function(test) {
+  }
+  /*default_options: function(test) {
     test.expect(1);
 
     var actual = grunt.file.read('tmp/default_options');
@@ -44,5 +44,5 @@ exports.fileserver = {
     test.equal(actual, expected, 'should describe what the custom option(s) behavior is.');
 
     test.done();
-  }
+  }*/
 };

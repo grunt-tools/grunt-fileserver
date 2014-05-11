@@ -30,21 +30,10 @@ module.exports = function(grunt) {
 
     // Configuration to be run (and then tested).
     fileserver: {
-      default_options: {
+      test: {
         options: {
-          directory: 'test'
-        },
-        files: {
-          'tmp/default_options': ['test/fixtures/testing', 'test/fixtures/123']
-        }
-      },
-      custom_options: {
-        options: {
-          separator: ': ',
-          punctuation: ' !!!'
-        },
-        files: {
-          'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123']
+          directory: 'test',
+          keepalive: true
         }
       }
     },
