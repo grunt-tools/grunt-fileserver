@@ -25,13 +25,16 @@ In your project's Gruntfile, add a section named `fileserver` to the data object
 ```js
 grunt.initConfig({
   fileserver: {
-    options: {
-      // Task-specific options go here.
-    },
-    your_target: {
-      // Target-specific file lists and/or options go here.
-    },
-  },
+    server1: {
+      options: {
+        port: 8080,
+        hostname: '0.0.0.0',
+        directory: null,
+        keepalive: false,
+        debug: false
+      }
+    }
+  }
 });
 ```
 
@@ -60,24 +63,3 @@ Type: `Boolean`
 Default value: false
 
 Enable or Disable keep server running. You may choose keep server running by other way. For example running watch after fileserver.
-
-### Usage Examples
-
-#### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
-
-```js
-grunt.initConfig({
-  fileserver: {
-    server1: {
-      options: {
-        port: 8080,
-        hostname: '0.0.0.0',
-        directory: null,
-        keepalive: false,
-        debug: false
-      }
-    }
-  }
-});
-```
