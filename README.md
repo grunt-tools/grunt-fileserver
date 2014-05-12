@@ -37,17 +37,29 @@ grunt.initConfig({
 
 ### Options
 
-#### options.separator
-Type: `String`
+#### options.port
+Type: `Number`
 Default value: `',  '`
 
-A string value that is used to do something with whatever.
+TCP connection port
 
-#### options.punctuation
+#### options.hostname
 Type: `String`
-Default value: `'.'`
+Default value: `0.0.0.0`
 
-A string value that is used to do something else with whatever else.
+Hostname which will listen the requests
+
+#### options.directory
+Type: `String`
+Default value: ``
+
+Folder to use as root directory
+
+#### options.directory
+Type: `Boolean`
+Default value: false
+
+Enable or Disable keep server running. You may choose keep server running by other way. For example running watch after fileserver.
 
 ### Usage Examples
 
@@ -57,33 +69,15 @@ In this example, the default options are used to do something with whatever. So 
 ```js
 grunt.initConfig({
   fileserver: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
+    server1: {
+      options: {
+        port: 8080,
+        hostname: '0.0.0.0',
+        directory: null,
+        keepalive: false,
+        debug: false
+      }
+    }
+  }
 });
 ```
-
-#### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
-
-```js
-grunt.initConfig({
-  fileserver: {
-    options: {
-      separator: ': ',
-      punctuation: ' !!!',
-    },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-});
-```
-
-## Contributing
-In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
-
-## Release History
-_(Nothing yet)_
