@@ -38,7 +38,7 @@ function runServer(options){
 
   options.port = options.port || 8080;
 
-  console.log('options : '+JSON.stringify(options));
+  if( options.debug ) console.log('options : '+JSON.stringify(options));
 
   return http.createServer(function(request, response) {
 
