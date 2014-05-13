@@ -59,7 +59,7 @@ function runServer(options){
 
       Object.keys(options.dirAlias).forEach(function(dir){
         if( matchAlias[dir].test(clearSlash(uri)) ) {
-          filename = path.join( path.resolve(process.cwd(),options.dirAlias[dir]), clearSlash(uri).replace(matchAlias[dir],'') );
+          filename = '/' + clearSlash(path.join( path.resolve(process.cwd(),options.dirAlias[dir]), clearSlash(uri).replace(matchAlias[dir],'') ) );
           // console.log('filename: '+filename);
           // console.log('alias: '+dir+' => '+options.dirAlias[dir]);
           // console.log('uri: '+uri+' => '+clearSlash(uri).replace(matchAlias[dir],''));
