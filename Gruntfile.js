@@ -33,7 +33,8 @@ module.exports = function(grunt) {
       test: {
         options: {
           directory: 'test',
-          dirAlias: {},
+          dirAlias: { 'dist': 'dist' },
+          cwd: '../../sx-theme',
           keepalive: true
         }
       }

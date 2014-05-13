@@ -35,7 +35,11 @@ function runServer(options){
       path = require("path"),
       fs = require("fs"),
       colors = require('colors'),
-      mime = require('mime');
+      mime = require('mime'),
+      cwd = process.cwd();
+
+  if( options.cwd ) cwd = path.resolve(cwd,options.cwd);
+  console.log('cwd: '+cwd);
 
   options.port = options.port || 8080;
 
@@ -52,17 +56,19 @@ function runServer(options){
 
   var server = http.createServer(function(request, response) {
 
-      var uri = url.parse(request.url).pathname,
-          basePath = process.cwd().replace(/\/$/,'')+( options.directory ? ('/' + options.directory) : '' ),
+
+      var uri = url.parse(request.url).pathname, uriClear = clearSlash(uri), uriLog = uri,
+          basePath = cwd.replace(/\/$/,'')+( options.directory ? ('/' + options.directory) : '' ),
           filename = path.join(basePath, uri),
           contentType = "text/plain";
 
       Object.keys(options.dirAlias).forEach(function(dir){
-        if( matchAlias[dir].test(clearSlash(uri)) ) {
-          filename = path.join( path.resolve(process.cwd(),options.dirAlias[dir]), clearSlash(uri).replace(matchAlias[dir],'') );
-          // console.log('filename: '+filename);
-          // console.log('alias: '+dir+' => '+options.dirAlias[dir]);
-          // console.log('uri: '+uri+' => '+clearSlash(uri).replace(matchAlias[dir],''));
+        if( matchAlias[dir].test(uriClear) ) {
+          var uriRelative = uriClear.replace(matchAlias[dir],'').replace(/^\//,'');
+
+          filename = path.join( path.resolve(cwd,options.dirAlias[dir]), uriRelative );
+
+          uriLog = ( '/' + dir ).blue + '/' + uriRelative;
         }
       });
 
@@ -71,7 +77,7 @@ function runServer(options){
               response.writeHead(404, {"Content-Type": "text/html"});
               response.write("<div style=\"text-align: center;\"><div style=\"display: inline-block; min-width: 80%; border: 1px solid #999; padding: 0.5em; text-align: left;\"><div><span style=\"color: red;\">404</span> <span style=\"font-weight: bold;\">"+uri+"</span></div><div>Not Found</div></div></div>");
               response.end();
-              if(options.log) console.log("[404] ".red + uri );
+              if(options.log) console.log("[404] ".red + uriLog );
               return;
           }
 
@@ -88,14 +94,14 @@ function runServer(options){
                   response.writeHead(500, {"Content-Type": contentType });
                   response.write(err + "\n");
                   response.end();
-                  if(options.log) console.log("[500] ".lightred + uri );
+                  if(options.log) console.log("[500] ".lightred + uriLog );
                   return;
               }
 
               response.writeHead(200, {"Content-Type": contentType });
               response.write(file, "binary");
               response.end();
-              if(options.log) console.log("[200] ".green + (' ' + uri ).white + ( '  (' + contentType + ')' ).yellow );
+              if(options.log) console.log("[200] ".green + (' ' + uriLog ).white + ( '  (' + contentType + ')' ).yellow );
           });
       });
   }).listen(parseInt(options.port, 10),options.hostname,function(){
