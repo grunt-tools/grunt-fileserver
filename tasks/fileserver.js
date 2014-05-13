@@ -26,6 +26,7 @@
 // git push -u origin master
 
 
+
 function runServer(options){
   options = options || {};
 
@@ -38,20 +39,39 @@ function runServer(options){
 
   options.port = options.port || 8080;
 
+  if( options.log == undefined ) options.log = true;
+
   if( options.debug ) console.log('options : '+JSON.stringify(options));
 
-  return http.createServer(function(request, response) {
+  function clearSlash(path_str){ return path_str.replace(/^\/|\/$/,''); }
+
+  var matchAlias = {};
+  Object.keys(options.dirAlias).forEach(function(dir){
+    matchAlias[dir] = new RegExp('^'+clearSlash(dir));
+  });
+
+  var server = http.createServer(function(request, response) {
 
       var uri = url.parse(request.url).pathname,
-      filename = path.join(process.cwd()+'/'+(options.directory || ''), uri),
-      contentType = "text/plain";
+          basePath = clearSlash(process.cwd())+( options.directory ? ('/' + options.directory) : '' ),
+          filename = path.join(basePath, uri),
+          contentType = "text/plain";
+
+      Object.keys(options.dirAlias).forEach(function(dir){
+        if( matchAlias[dir].test(clearSlash(uri)) ) {
+          filename = path.join( path.resolve(process.cwd(),options.dirAlias[dir]), clearSlash(uri).replace(matchAlias[dir],'') );
+          // console.log('filename: '+filename);
+          // console.log('alias: '+dir+' => '+options.dirAlias[dir]);
+          // console.log('uri: '+uri+' => '+clearSlash(uri).replace(matchAlias[dir],''));
+        }
+      });
 
       fs.exists(filename, function(exists) {
           if(!exists) {
-              response.writeHead(404, {"Content-Type": "text/plain"});
-              response.write("404 Not Found\n");
+              response.writeHead(404, {"Content-Type": "text/html"});
+              response.write("<div style=\"text-align: center;\"><div style=\"display: inline-block; min-width: 80%; border: 1px solid #999; padding: 0.5em; text-align: left;\"><div><span style=\"color: red;\">404</span> <span style=\"font-weight: bold;\">"+uri+"</span></div><div>Not Found</div></div></div>");
               response.end();
-              console.log("[404] ".red + filename.white );
+              if(options.log) console.log("[404] ".red + filename.white );
               return;
           }
 
@@ -68,19 +88,22 @@ function runServer(options){
                   response.writeHead(500, {"Content-Type": contentType });
                   response.write(err + "\n");
                   response.end();
-                  console.log("[500] ".lightred + filename.white );
+                  if(options.log) console.log("[500] ".lightred + filename.white );
                   return;
               }
 
               response.writeHead(200, {"Content-Type": contentType });
               response.write(file, "binary");
               response.end();
-              console.log("[200] ".green + (' ' + filename ).white + ( '(' + contentType + ')' ).yellow );
+              if(options.log) console.log("[200] ".green + (' ' + filename ).white + ( '(' + contentType + ')' ).yellow );
           });
       });
   }).listen(parseInt(options.port, 10),options.hostname,function(){
       console.log("Static file server running at\n  => ".yellow + ( "http://"+( ( options.hostname === "0.0.0.0" ) ? "localhost": options.hostname )+":" + options.port ).green + "/\nCTRL + C to shutdown\n".yellow );
+      if( options.onCreateServer instanceof Function ) options.onCreateServer.call(server);
   });
+
+  return server;
 
 }
 
@@ -94,14 +117,14 @@ module.exports = function(grunt) {
       protocol: 'http',
       port: 8080,
       hostname: '0.0.0.0',
-      base: '.',
       directory: null,
       keepalive: false,
       debug: false,
       livereload: false,
       open: false,
-      useAvailablePort: false,
-      onCreateServer: null
+      // useAvailablePort: false,
+      onCreateServer: null,
+      dirAlias: {}
 
       // // if nothing passed, then is set below 'middleware = createDefaultMiddleware.call(this, connect, options);'
       // middleware: null

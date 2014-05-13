@@ -63,3 +63,8 @@ Type: `Boolean`
 Default value: false
 
 Enable or Disable keep server running. You may choose keep server running by other way. For example running watch after fileserver.
+
+
+## Release History
+
+* 2014-05-13    v0.1.16    Now supports dir alias.

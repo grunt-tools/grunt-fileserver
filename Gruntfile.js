@@ -33,6 +33,7 @@ module.exports = function(grunt) {
       test: {
         options: {
           directory: 'test',
+          dirAlias: {},
           keepalive: true
         }
       }
