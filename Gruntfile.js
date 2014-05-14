@@ -32,10 +32,12 @@ module.exports = function(grunt) {
     fileserver: {
       test: {
         options: {
-          directory: 'test',
+          root: 'test',
           dirAlias: { 'dist': 'dist' },
           cwd: '../../sx-theme',
-          keepalive: true
+          keepalive: false,
+          onStart: function(){ console.log('server started'); },
+          onStop: function(){ console.log('server stopped'); }
         }
       }
     },
@@ -47,6 +49,8 @@ module.exports = function(grunt) {
 
   });
 
+  grunt.registerTask('keepalive', 'Waits forever', function() { var done = this.async(); });
+
   // Actually load this plugin's task(s).
   grunt.loadTasks('tasks');
 
@@ -57,7 +61,7 @@ module.exports = function(grunt) {
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['clean', 'fileserver', 'nodeunit']);
+  grunt.registerTask('test', ['clean', 'fileserver', 'keepalive']);
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint', 'test']);

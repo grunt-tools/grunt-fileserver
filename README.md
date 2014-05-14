@@ -29,9 +29,14 @@ grunt.initConfig({
       options: {
         port: 8080,
         hostname: '0.0.0.0',
-        directory: null,
+        cwd: '.'
+        root: 'test',
+        dirAlias: {
+          'dist': 'dist'
+        },
         keepalive: false,
-        debug: false
+        onStart: function(){ console.log('server started'); },
+        onStop: function(){ console.log('server stopped'); }
       }
     }
   }
@@ -42,7 +47,7 @@ grunt.initConfig({
 
 #### options.port
 Type: `Number`
-Default value: `',  '`
+Default value: `8080`
 
 TCP connection port
 
@@ -52,13 +57,25 @@ Default value: `0.0.0.0`
 
 Hostname which will listen the requests
 
-#### options.directory
+#### options.cwd
+Type: `String`
+Default value: `.`
+
+Current Working directory. All referencies will be relative to this.
+
+#### options.root
 Type: `String`
 Default value: ``
 
-Folder to use as root directory
+Folder to use as server root directory
 
-#### options.directory
+#### options.dirAlias
+Type: `Object`
+Default value: `{}`
+
+List of directories alias. This allows using directories outside root directory to be served as them was in.
+
+#### options.keepalive
 Type: `Boolean`
 Default value: false
 

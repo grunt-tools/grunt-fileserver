@@ -8,25 +8,6 @@
 
 'use strict';
 
-  // keep an eye on
-  // https://github.com/gruntjs/grunt-contrib-connect/blob/master/tasks/connect.js
-
-
-//   Create a new repository on the command line
-
-// touch README.md
-// git init
-// git add README.md
-// git commit -m "first commit"
-// git remote add origin git@github.com:jgermade/grunt-fileserver.git
-// git push -u origin master
-// Push an existing repository from the command line
-
-// git remote add origin git@github.com:jgermade/grunt-fileserver.git
-// git push -u origin master
-
-
-
 function runServer(options){
   options = options || {};
 
@@ -58,7 +39,7 @@ function runServer(options){
 
 
       var uri = url.parse(request.url).pathname, uriClear = clearSlash(uri), uriLog = uri,
-          basePath = cwd.replace(/\/$/,'')+( options.directory ? ('/' + options.directory) : '' ),
+          basePath = cwd.replace(/\/$/,'')+( options.root ? ('/' + options.root) : '' ),
           filename = path.join(basePath, uri),
           contentType = "text/plain";
 
@@ -106,7 +87,7 @@ function runServer(options){
       });
   }).listen(parseInt(options.port, 10),options.hostname,function(){
       console.log("Static file server running at\n  => ".yellow + ( "http://"+( ( options.hostname === "0.0.0.0" ) ? "localhost": options.hostname )+":" + options.port ).green + "/\nCTRL + C to shutdown\n".yellow );
-      if( options.onCreateServer instanceof Function ) options.onCreateServer.call(server);
+      if( options.onStart instanceof Function ) options.onStart.call(server);
   });
 
   return server;
@@ -117,23 +98,20 @@ module.exports = function(grunt) {
 
   grunt.registerMultiTask('fileserver', 'Fast customizable development server', function() {
 
-    // var done = this.async();
     // Merge task-specific options with these defaults.
     var options = this.options({
       protocol: 'http',
       port: 8080,
       hostname: '0.0.0.0',
-      directory: null,
+      root: null,
       keepalive: false,
       debug: false,
       livereload: false,
       open: false,
       // useAvailablePort: false,
-      onCreateServer: null,
-      dirAlias: {}
-
-      // // if nothing passed, then is set below 'middleware = createDefaultMiddleware.call(this, connect, options);'
-      // middleware: null
+      dirAlias: {},
+      onStart: null,
+      onStop: null
     });
 
     // Connect will listen to all interfaces if hostname is null.
@@ -142,43 +120,15 @@ module.exports = function(grunt) {
     }
 
     // console.log('debug'+runServer);
+    var done = options.keepalive ? this.async() : function(){};
     try {
-      runServer(options).close(options.keepalive ? this.async() : function(){});
+      runServer(options).close(function(){
+        done();
+        if( options.onStop instanceof Function ) options.onStop.call(this);
+      });
     } catch(err){
       console.log(err.message);
     }
-
-    // // Merge task-specific and/or target-specific options with these defaults.
-    // var options = this.options({
-    //   punctuation: '.',
-    //   separator: ', '
-    // });
-
-    // // Iterate over all specified file groups.
-    // this.files.forEach(function(f) {
-    //   // Concat specified files.
-    //   var src = f.src.filter(function(filepath) {
-    //     // Warn on and remove invalid source files (if nonull was set).
-    //     if (!grunt.file.exists(filepath)) {
-    //       grunt.log.warn('Source file "' + filepath + '" not found.');
-    //       return false;
-    //     } else {
-    //       return true;
-    //     }
-    //   }).map(function(filepath) {
-    //     // Read file source.
-    //     return grunt.file.read(filepath);
-    //   }).join(grunt.util.normalizelf(options.separator));
-
-    //   // Handle options.
-    //   src += options.punctuation;
-
-    //   // Write the destination file.
-    //   grunt.file.write(f.dest, src);
-
-    //   // Print a success message.
-    //   grunt.log.writeln('File "' + f.dest + '" created.');
-    // });
   });
 
 };
