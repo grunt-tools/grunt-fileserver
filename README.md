@@ -1,4 +1,5 @@
-# grunt-fileserver
+grunt-fileserver [![NPM version](https://badge.fury.io/js/grunt-fileserver.svg)](http://badge.fury.io/js/grunt-fileserver)
+================
 
 > Fast customizable development server
 
