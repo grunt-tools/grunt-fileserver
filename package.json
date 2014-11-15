@@ -1,8 +1,8 @@
 {
   "name": "grunt-fileserver",
   "description": "Fast customizable file server for grunt task",
-  "version": "0.1.22",
-  "homepage": "https://github.com/jgermade/grunt-fileserver",
+  "version": "0.1.23",
+  "homepage": "https://github.com/jstools/grunt-fileserver",
   "author": {
     "name": "Jesús Germade",
     "email": "jesus@germade.es",
@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:jgermade/grunt-fileserver.git"
+    "url": "git@github.com:jstools/grunt-fileserver.git"
   },
   "bugs": {
-    "url": "https://github.com/jgermade/grunt-fileserver/issues"
+    "url": "https://github.com/jstools/grunt-fileserver/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/jgermade/grunt-fileserver/blob/master/LICENSE-MIT"
+      "url": "https://github.com/jstools/grunt-fileserver/blob/master/LICENSE-MIT"
     }
   ],
   "engines": {
