@@ -1,7 +1,7 @@
 {
   "name": "grunt-fileserver",
   "description": "Fast customizable file server for grunt task",
-  "version": "0.1.23",
+  "version": "0.1.24",
   "homepage": "https://github.com/jstools/grunt-fileserver",
   "author": {
     "name": "Jesús Germade",

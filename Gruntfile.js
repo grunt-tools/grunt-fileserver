@@ -34,7 +34,7 @@ module.exports = function(grunt) {
         options: {
           root: 'test',
           dirAlias: { 'dist': 'dist' },
-          cwd: '../../sx-theme',
+          cwd: '.',
           keepalive: false,
           onStart: function(){ console.log('server started'); },
           onStop: function(){ console.log('server stopped'); }

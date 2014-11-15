@@ -19,14 +19,20 @@ function runServer(options){
       mime = require('mime'),
       cwd = process.cwd();
 
-  if( options.cwd ) cwd = path.resolve(cwd,options.cwd);
-  console.log('cwd: '+cwd);
+  if( options.cwd ) {
+    cwd = path.resolve(cwd,options.cwd);
+  }
+  console.log('cwd: ' + cwd);
 
   options.port = options.port || 8080;
 
-  if( options.log == undefined ) options.log = true;
+  if( options.log === undefined ) {
+    options.log = true;
+  }
 
-  if( options.debug ) console.log('options : '+JSON.stringify(options));
+  if( options.debug ) {
+    console.log('options : '+JSON.stringify(options));
+  }
 
   function clearSlash(path_str){ return path_str.replace(/^\/|\/$/,''); }
 
@@ -58,7 +64,9 @@ function runServer(options){
               response.writeHead(404, {"Content-Type": "text/html"});
               response.write("<div style=\"text-align: center;\"><div style=\"display: inline-block; min-width: 80%; border: 1px solid #999; padding: 0.5em; text-align: left;\"><div><span style=\"color: red;\">404</span> <span style=\"font-weight: bold;\">"+uri+"</span></div><div>Not Found</div></div></div>");
               response.end();
-              if(options.log) console.log("[404] ".red + uriLog );
+              if(options.log) {
+                console.log("[404] ".red + uriLog );
+              }
               return;
           }
 
@@ -75,19 +83,25 @@ function runServer(options){
                   response.writeHead(500, {"Content-Type": contentType });
                   response.write(err + "\n");
                   response.end();
-                  if(options.log) console.log("[500] ".lightred + uriLog );
+                  if(options.log) {
+                    console.log("[500] ".lightred + uriLog );
+                  }
                   return;
               }
 
               response.writeHead(200, {"Content-Type": contentType });
               response.write(file, "binary");
               response.end();
-              if(options.log) console.log("[200] ".green + (' ' + uriLog ).white + ( '  (' + contentType + ')' ).yellow );
+              if(options.log) {
+                console.log("[200] ".green + (' ' + uriLog ).white + ( '  (' + contentType + ')' ).yellow );
+              }
           });
       });
   }).listen(parseInt(options.port, 10),options.hostname,function(){
       console.log("Static file server running at\n  => ".yellow + ( "http://"+( ( options.hostname === "0.0.0.0" ) ? "localhost": options.hostname )+":" + options.port ).green + "/\nCTRL + C to shutdown\n".yellow );
-      if( options.onStart instanceof Function ) options.onStart.call(server);
+      if( options.onStart instanceof Function ) {
+        options.onStart.call(server);
+      }
   });
 
   return server;
@@ -124,7 +138,9 @@ module.exports = function(grunt) {
     try {
       runServer(options).close(function(){
         done();
-        if( options.onStop instanceof Function ) options.onStop.call(this);
+        if( options.onStop instanceof Function ) {
+          options.onStop.call(this);
+        }
       });
     } catch(err){
       console.log(err.message);
