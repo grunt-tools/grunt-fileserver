@@ -37,7 +37,9 @@ module.exports = function(grunt) {
           cwd: '.',
           keepalive: false,
           onStart: function(){ console.log('server started'); },
-          onStop: function(){ console.log('server stopped'); }
+          onStop: function(){ console.log('server stopped'); },
+          openInBrowser: true,
+          addExtension: 'html'
         }
       }
     },
