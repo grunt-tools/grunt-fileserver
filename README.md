@@ -90,3 +90,4 @@ Enable or Disable keep server running. You may choose keep server running by oth
 * 2014-05-13    v0.1.16    Now supports dir alias.
 * 2014-11-17    v0.1.25    Added openInBrowser and addExtension
 * 2014-11-18    v0.1.26    Updating README
+* 2014-11-18    v0.1.27    addExtension fix

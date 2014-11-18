@@ -48,7 +48,7 @@ function runServer(options){
           filename = path.join(basePath, uri),
           contentType = "text/plain";
 
-      if( options.addExtension && /[a-z]$/.test(filename) ) {
+      if( options.addExtension && /[a-z]$/.test(filename) && !/[a-z]+\.[a-z]+$/.test(filename) ) {
         filename += '.' + options.addExtension;
       }
 
