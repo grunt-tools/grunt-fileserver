@@ -32,6 +32,8 @@ module.exports = function(grunt) {
     fileserver: {
       test: {
         options: {
+          hostname: '0.0.0.0',
+          port: 8080,
           root: 'test',
           dirAlias: { 'dist': 'dist' },
           cwd: '.',
@@ -39,7 +41,8 @@ module.exports = function(grunt) {
           onStart: function(){ console.log('server started'); },
           onStop: function(){ console.log('server stopped'); },
           openInBrowser: true,
-          addExtension: 'html'
+          addExtension: 'html',
+          rewrite404: '/index.html'
         }
       }
     },

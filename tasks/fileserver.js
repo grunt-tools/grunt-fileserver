@@ -62,15 +62,21 @@ function runServer(options){
         }
       });
 
+      console.log('options', options);
+
       fs.exists(filename, function(exists) {
           if(!exists) {
-              response.writeHead(404, {"Content-Type": "text/html"});
-              response.write("<div style=\"text-align: center;\"><div style=\"display: inline-block; min-width: 80%; border: 1px solid #999; padding: 0.5em; text-align: left;\"><div><span style=\"color: red;\">404</span> <span style=\"font-weight: bold;\">"+uri+"</span></div><div>Not Found</div></div></div>");
-              response.end();
-              if(options.log) {
-                console.log("[404] ".red + uriLog );
+              if( options.rewrite404 ) {
+                filename = path.join( basePath, options.rewrite404 );
+              } else {
+                response.writeHead(404, {"Content-Type": "text/html"});
+                response.write("<div style=\"text-align: center;\"><div style=\"display: inline-block; min-width: 80%; border: 1px solid #999; padding: 0.5em; text-align: left;\"><div><span style=\"color: red;\">404</span> <span style=\"font-weight: bold;\">"+uri+"</span></div><div>Not Found</div></div></div>");
+                response.end();
+                if(options.log) {
+                  console.log("[404] ".red + uriLog );
+                }
+                return;
               }
-              return;
           }
 
           if(fs.statSync(filename).isDirectory()) {
