@@ -22,7 +22,6 @@ function runServer(options){
   if( options.cwd ) {
     cwd = path.resolve(cwd,options.cwd);
   }
-  console.log('cwd: ' + cwd);
 
   options.port = options.port || 8080;
 
@@ -61,8 +60,6 @@ function runServer(options){
           uriLog = ( '/' + dir ).blue + '/' + uriRelative;
         }
       });
-
-      console.log('options', options);
 
       fs.exists(filename, function(exists) {
           if(!exists) {
