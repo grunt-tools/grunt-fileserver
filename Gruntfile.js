@@ -33,7 +33,7 @@ module.exports = function(grunt) {
       test: {
         options: {
           hostname: '0.0.0.0',
-          port: 8080,
+          port: 1234,
           root: 'test',
           dirAlias: { 'dist': 'dist' },
           cwd: '.',
@@ -42,7 +42,12 @@ module.exports = function(grunt) {
           onStop: function(){ console.log('server stopped'); },
           openInBrowser: true,
           addExtension: 'html',
-          rewrite404: '/index.html'
+          rewrite404: '/index.html',
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+            'Access-Control-Allow-Headers': 'Content-Type'
+          }
         }
       }
     },

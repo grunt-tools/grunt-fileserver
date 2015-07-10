@@ -23,7 +23,7 @@ grunt.loadNpmTasks('grunt-fileserver');
 ### Overview
 In your project's Gruntfile, add a section named `fileserver` to the data object passed into `grunt.initConfig()`.
 
-```js
+``` js
 grunt.initConfig({
   fileserver: {
     server1: {
@@ -39,7 +39,12 @@ grunt.initConfig({
         onStart: function(){ console.log('server started'); },
         onStop: function(){ console.log('server stopped'); },
         openInBrowser: true,   // true (for default browser) or app name (eg: 'chrome', 'firefox')
-        addExtension: 'html'   // add extension to url not ended in '/'
+        addExtension: 'html',   // add extension to url not ended in '/'
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+          'Access-Control-Allow-Headers': 'Content-Type'
+        }
       }
     }
   }

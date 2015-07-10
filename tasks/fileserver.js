@@ -51,6 +51,12 @@ function runServer(options){
         filename += '.' + options.addExtension;
       }
 
+      if( options.headers ) {
+        for( var header in options.headers ) {
+          response.setHeader(header, options.headers[header]);
+        }
+      }
+
       Object.keys(options.dirAlias).forEach(function(dir){
         if( matchAlias[dir].test(uriClear) ) {
           var uriRelative = uriClear.replace(matchAlias[dir],'').replace(/^\//,'');
@@ -79,13 +85,13 @@ function runServer(options){
           if(fs.statSync(filename).isDirectory()) {
             filename += ( ( /\/$/.test(filename) ? '' : '/' ) + 'index.html' );
           }
-          
+
           if( /\w+\.\w+/.test(filename) ) {
             contentType = mime.lookup( filename ) || contentType;
           }
 
           fs.readFile(filename, "binary", function(err, file) {
-              if(err) {        
+              if(err) {
                   response.writeHead(500, {"Content-Type": contentType });
                   response.write(err + "\n");
                   response.end();
@@ -125,20 +131,21 @@ module.exports = function(grunt) {
   grunt.registerMultiTask('fileserver', 'Fast customizable development server', function() {
 
     // Merge task-specific options with these defaults.
-    var options = this.options({
-      protocol: 'http',
-      port: 8080,
-      hostname: '0.0.0.0',
-      root: null,
-      keepalive: false,
-      debug: false,
-      livereload: false,
-      open: false,
-      // useAvailablePort: false,
-      dirAlias: {},
-      onStart: null,
-      onStop: null
-    });
+    var noop = function () {},
+        options = this.options({
+          protocol: 'http',
+          port: 8080,
+          hostname: '0.0.0.0',
+          root: null,
+          keepalive: false,
+          debug: false,
+          livereload: false,
+          open: false,
+          // useAvailablePort: false,
+          dirAlias: {},
+          onStart: noop,
+          onStop: noop
+        });
 
     // Connect will listen to all interfaces if hostname is null.
     if (options.hostname === '*') {
@@ -148,11 +155,13 @@ module.exports = function(grunt) {
     // console.log('debug'+runServer);
     var done = options.keepalive ? this.async() : function(){};
     try {
-      runServer(options).close(function(){
+      var server = runServer(options);
+      process.on('SIGINT', function() {
+        options.onStop.call(server);
+        console.log('\nbye!'.yellow);
         done();
-        if( options.onStop instanceof Function ) {
-          options.onStop.call(this);
-        }
+        server.close();
+        process.exit();
       });
     } catch(err){
       console.log(err.message);
